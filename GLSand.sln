@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.28307.421
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GLSand", "GLSand\GLSand.csproj", "{9EAA57C7-5695-497C-8C43-340C3D6787B0}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{9EAA57C7-5695-497C-8C43-340C3D6787B0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9EAA57C7-5695-497C-8C43-340C3D6787B0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9EAA57C7-5695-497C-8C43-340C3D6787B0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9EAA57C7-5695-497C-8C43-340C3D6787B0}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {AC4E5263-EE77-42E7-A875-6A27C57509BF}
+	EndGlobalSection
+EndGlobal
