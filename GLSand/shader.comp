@@ -1,0 +1,104 @@
+﻿#version 430
+uniform float roll; 
+uniform writeonly image2D destTex; 
+uniform sampler2D srcTex;
+uniform int firstframe;
+
+layout (local_size_x = 16, local_size_y = 16, local_size_z = 1) in; 
+
+float rand(float n){return fract(sin(n) * 43758.5453123);}
+
+const vec4 white = vec4(1.0, 1.0, 1.0, 1.0);
+const vec4 black = vec4(0.0, 0.0, 0.0, 1.0);
+const float radius = 0.25f;
+const float pixelsize = 1.0 / 256.0;
+
+bool equals(vec4 a, vec4 b) {
+	return a.r == b.r && a.g == b.g && a.b == b.b;
+}
+
+bool exists(vec4 color)
+{
+    return color.r != 0 || color.g != 0 || color.b != 0;
+}
+
+void main() { 
+	ivec2 pos = ivec2(gl_GlobalInvocationID.x, gl_GlobalInvocationID.y);
+	ivec2 npos = ivec2(gl_GlobalInvocationID.x * 2, gl_GlobalInvocationID.y * 2);
+	
+	vec2 uvpos = vec2(npos.x / 256.0, npos.y / 256.0);
+	
+	vec4 p = texture(srcTex, uvpos);
+
+
+	if (npos.y <= 8)
+    {
+        imageStore(destTex, pos, white);
+		return;
+    }
+	if(npos.y >= 254 || npos.x <= 2 || npos.x >= 254)
+	{
+		imageStore(destTex, pos, black);
+		return;
+	}
+
+	vec4 colors[3][3];
+
+    uint types[3][3];
+
+    for (uint i = 0; i < 3; i++)
+    {
+        for (uint j = 0; j < 3; j++)
+        {
+            colors[i][j] = texture(srcTex, vec2(float(npos.x + 2*(i - 1)) / 256.0, float(npos.y - 2*(j - 1)) / 256.0));
+            if (equals(colors[i][j], white))
+                types[i][j] = 1;
+            else
+                types[i][j] = 0;
+        }
+    }
+    
+    
+
+    
+    
+
+
+    if (types[1][1] == 1)
+    {
+        if (types[0][2] == 1 && types[1][2] == 1 && types[2][2] == 1)
+		{
+            imageStore(destTex, pos, colors[1][1]);
+			return;
+		}
+		else
+		{
+			imageStore(destTex, pos, black);
+			return;
+		}
+    }
+    else
+    {
+        if (exists(colors[1][0]))
+		{
+            imageStore(destTex, pos, colors[1][0]);
+			return;
+		}
+
+
+        if (types[0][0] != 0 && types[0][1] != 0 && types[1][2] != 0)
+		{
+            imageStore(destTex, pos, colors[0][0]);
+			return;
+		}
+        if (types[2][0] != 0 && types[2][1] != 0 && types[1][2] != 0)
+        {
+			imageStore(destTex, pos, colors[2][0]);
+			return;
+		}
+    }
+
+
+
+    imageStore(destTex, pos, black);
+} 

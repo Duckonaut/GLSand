@@ -6,14 +6,15 @@ using System.Threading.Tasks;
 
 namespace GLSand
 {
-	class Program
+	public struct Point
 	{
-		static void Main(string[] args)
+		public int X;
+		public int Y;
+
+		public Point(int x, int y)
 		{
-			using (Game game = new Game(512, 512, "GLSand"))
-			{
-				game.Run(60.0, 60.0);
-			}
+			X = x;
+			Y = y;
 		}
 	}
 }
