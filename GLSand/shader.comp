@@ -22,9 +22,32 @@ bool exists(vec4 color)
     return color.r != 0 || color.g != 0 || color.b != 0;
 }
 
+uint maptype(vec4 color)
+{
+	if(exists(color))
+		return 1;
+	
+	return 0;
+}
+
+vec4 getpixel(vec2 pos)
+{
+	return texture(srcTex, pos);
+}
+
+vec4 getpixel(ivec2 bpos, ivec2 rel)
+{
+	return getpixel(vec2(float(bpos.x + 2*(rel.x)) / 256.0, float(bpos.y - 2*(rel.y)) / 256.0));
+}
+
+uint gettype(ivec2 bpos, ivec2 rel)
+{
+	return maptype(getpixel(vec2(float(bpos.x + 2*(rel.x)) / 256.0, float(bpos.y - 2*(rel.y)) / 256.0)));
+}
+
 void main() { 
-	ivec2 pos = ivec2(gl_GlobalInvocationID.x, gl_GlobalInvocationID.y);
-	ivec2 npos = ivec2(gl_GlobalInvocationID.x * 2, gl_GlobalInvocationID.y * 2);
+	ivec2 pos = ivec2(gl_GlobalInvocationID.x / 2, gl_GlobalInvocationID.y / 2);
+	ivec2 npos = ivec2(gl_GlobalInvocationID.x, gl_GlobalInvocationID.y);
 	
 	vec2 uvpos = vec2(npos.x / 256.0, npos.y / 256.0);
 	
@@ -50,11 +73,8 @@ void main() {
     {
         for (uint j = 0; j < 3; j++)
         {
-            colors[i][j] = texture(srcTex, vec2(float(npos.x + 2*(i - 1)) / 256.0, float(npos.y - 2*(j - 1)) / 256.0));
-            if (equals(colors[i][j], white))
-                types[i][j] = 1;
-            else
-                types[i][j] = 0;
+            colors[i][j] = getpixel(npos, ivec2(i - 1, j - 1));
+            types[i][j] = maptype(colors[i][j]);
         }
     }
     
