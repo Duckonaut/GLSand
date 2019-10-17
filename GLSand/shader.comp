@@ -8,7 +8,7 @@ layout (local_size_x = 16, local_size_y = 16, local_size_z = 1) in;
 
 float rand(float n){return fract(sin(n) * 43758.5453123);}
 
-const vec4 white = vec4(1.0, 1.0, 1.0, 1.0);
+const vec4 sand = vec4(1.0 / 256.0, 1.0, 1.0, 1.0);
 const vec4 black = vec4(0.0, 0.0, 0.0, 1.0);
 const float radius = 0.25f;
 const float pixelsize = 1.0 / 256.0;
@@ -24,10 +24,7 @@ bool exists(vec4 color)
 
 uint maptype(vec4 color)
 {
-	if(exists(color))
-		return 1;
-	
-	return 0;
+	return uint(color.r * 256);
 }
 
 vec4 getpixel(vec2 pos)
@@ -48,15 +45,10 @@ uint gettype(ivec2 bpos, ivec2 rel)
 void main() { 
 	ivec2 pos = ivec2(gl_GlobalInvocationID.x / 2, gl_GlobalInvocationID.y / 2);
 	ivec2 npos = ivec2(gl_GlobalInvocationID.x, gl_GlobalInvocationID.y);
-	
-	vec2 uvpos = vec2(npos.x / 256.0, npos.y / 256.0);
-	
-	vec4 p = texture(srcTex, uvpos);
-
 
 	if (npos.y <= 8)
     {
-        imageStore(destTex, pos, white);
+        imageStore(destTex, pos, sand);
 		return;
     }
 	if(npos.y >= 254 || npos.x <= 2 || npos.x >= 254)

@@ -23,6 +23,8 @@ namespace GLSand
 			-1f,  1f, 0.0f, 0.0f, 1.0f  // top left
 		};
 
+		float[] cursorVs = { };
+
 		uint[] indices = {  // note that we start from 0!
 			0, 1, 3,   // first triangle
 			1, 2, 3    // second triangle
@@ -40,6 +42,7 @@ namespace GLSand
 		int computeShader;
 
 		Shader shader;
+		Shader mappershader;
 		Texture texture;
 		int renderedTexture0;
 		int renderedTexture1;
@@ -78,12 +81,14 @@ namespace GLSand
 			shader = new Shader("shader.vert", "shader.frag");
 			shader.Use();
 
+			mappershader = new Shader("typemapper.vert", "typemapper.frag");
+
 			computeShader = SetupComputeProgram(computeShader);
 
 			texture = new Texture(256, 256, new Color(255, 255, 255, 255), true);
 			texture.Use();
 
-			noiseTexture = new Texture(256, 256, new Color(255, 255, 255, 255), false);
+			noiseTexture = new Texture(256, 256, new Color(1, 0, 0, 255), false);
 			noiseTexture.Use();
 
 			RenderTarget0 = GL.GenFramebuffer();
@@ -200,6 +205,9 @@ namespace GLSand
 				GL.DispatchCompute(texSize.X / 16, texSize.Y / 16, 1);
 				texture.Use();
 				shader.Use();
+				Vector2 mp = new Vector2(Mouse.GetCursorState().X, Mouse.GetCursorState().Y) - new Vector2(Location.X, Location.Y);
+				Console.WriteLine(mp.ToString());
+				GL.Uniform2(GL.GetUniformLocation(shader.Handle, "cpos"), (mp.X - 8) / 2, 256 - (mp.Y - 32) / 2);
 			}
 
 
@@ -212,7 +220,7 @@ namespace GLSand
 
 			if (rt0) GL.BindTexture(TextureTarget.Texture2D, renderedTexture0);
 			else GL.BindTexture(TextureTarget.Texture2D, renderedTexture1);
-			shader.Use();
+			mappershader.Use();
 
 			GL.DrawElements(PrimitiveType.Triangles, indices.Length, DrawElementsType.UnsignedInt, 0);
 

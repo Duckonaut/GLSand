@@ -16,10 +16,10 @@ namespace GLSand
 			byte[] pixels = new byte[width * height * 4];
 			for(int i = 0; i < width * height * 4; i += 4)
 			{
-				byte val = Game.Rand.Next(8) == 0 ? (byte)255 : (byte)0;
-				pixels[i] = val;
-				pixels[i+1] = val;
-				pixels[i+2] = val;
+				bool val = Game.Rand.Next(8) == 0;
+				pixels[i] = val ? color.R : (byte)0;
+				pixels[i+1] = val ? color.G : (byte)0;
+				pixels[i+2] = val ? color.B : (byte)0;
 				pixels[i+3] = color.A;
 			}
 
